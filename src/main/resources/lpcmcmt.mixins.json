@@ -4,9 +4,7 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"EntityListMixin",
-		"EntityMixin",
 		"MinecraftServerMixin",
-		"ServerEntityMixin",
 		"ServerWorldMixin"
 	],
 	"injectors": {

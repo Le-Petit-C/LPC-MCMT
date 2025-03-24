@@ -2,7 +2,6 @@ package lpcmcmt.mixin;
 
 import lpcmcmt.EntityMultiThreadManager;
 import lpcmcmt.mixinInterfaces.IEntityListMixin;
-import lpcmcmt.mixinInterfaces.IEntityMixin;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -30,12 +29,6 @@ public abstract class ServerWorldMixin {
             inst.setIterating(inst.getEntities());
             try {
                 EntityMultiThreadManager.iterateEntities(getMultiThread(getServer()), inst.getEntities().values(), action);
-                //getMultiThread(getServer()).multiThreadIterate(inst.getEntities().values(), action);
-                /*for(Entity entity : inst.getEntities().values())
-                    ((IEntityMixin)entity).lPC_MCMT$useTempPos();*/
-                /*for (Entity entity : inst.getEntities().values()) {
-                    action.accept(entity);
-                }*/
             } finally {
                 inst.setIterating(null);
             }
