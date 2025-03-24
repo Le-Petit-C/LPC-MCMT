@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "lpcmcmt",
 	"version": "${version}",
 	"name": "Example mod",
 	"description": "This is an example description! Tell everyone what your mod is about!",
@@ -16,16 +16,16 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
+          "lpcmcmt.ExampleMod"
 		],
 		"client": [
-			"com.example.ExampleModClient"
+          "lpcmcmt.ExampleModClient"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
+		"lpcmcmt.mixins.json",
 		{
-			"config": "modid.client.mixins.json",
+			"config": "lpcmcmt.client.mixins.json",
 			"environment": "client"
 		}
 	],

@@ -1,4 +1,4 @@
-package com.example;
+package lpcmcmt;
 
 import net.fabricmc.api.ClientModInitializer;
 
