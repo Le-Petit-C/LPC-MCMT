@@ -1,31 +1,22 @@
 package lpcmcmt.Utils;
 
-import lpcmcmt.Main;
-
 public class IntegerLock {
-    static int _id = 0;
-    int id = ++_id;
     public void addAndWaitUntilZero(int delta) throws InterruptedException {
         synchronized (this){
             n += delta;
-            Main.LOGGER.info("Lock{} - current{}", id, n);
-            if(n == 0){
-                Main.LOGGER.info("Lock{} - notify", id);
+            if(n == 0)
                 notifyAll();
-            }
-            else {
-                Main.LOGGER.info("Lock{} - wait", id);
-                this.wait();
-            }
+            else this.wait();
         }
     }
     public void add(int delta){
         synchronized (this){
             n += delta;
-            if(n == 0)
-                this.notifyAll();
+            if(n == 0) this.notifyAll();
         }
     }
-    private int n = 0;
     public void subtractAndWaitUntilZero() throws InterruptedException {addAndWaitUntilZero(-1);}
+    public void subtract(){add(-1);}
+
+    private int n = 0;
 }

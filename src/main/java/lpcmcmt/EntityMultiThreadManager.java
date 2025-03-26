@@ -20,6 +20,8 @@ public class EntityMultiThreadManager implements Runnable{
                 list = iterateSeparations.getLast();
                 iterateSeparations.removeLast();
             }
+            /*if(!currentThread().getName().equals("Server thread"))
+                Main.LOGGER.info("Another thread running!");*/
             for(Entity entity : list)
                 action.accept(entity);
         }
@@ -46,45 +48,44 @@ public class EntityMultiThreadManager implements Runnable{
             }
         }
         for(Entity entity : iterable){
-            ArrayList<Entity> list = chunkToList.get(entityChunks.get(ChunkPos.fromEntity(entity)));
-            if(list == null) continue;
+            ArrayList<Entity> list = chunkToList.get(ChunkPos.fromEntity(entity).findRoot(entityChunks));
             list.add(entity);
         }
         iterateSeparations.sort(Comparator.comparingInt(ArrayList::size));
+        Main.LOGGER.info("Entity list list size: {}", iterateSeparations.size());
     }
 
     private record ChunkPos(int x, int z) {
         public static ChunkPos fromEntity(Entity entity) {
-            return new ChunkPos(entity.getBlockX() >> 4, entity.getBlockZ() >> 4);
+            return new ChunkPos(entity.getBlockX() >> 8, entity.getBlockZ() >> 8);
         }
         @Override public int hashCode() {
             return (x << 16) | (z & ((1 << 16) - 1));
         }
-        @Override
-        public boolean equals(Object o) {
+        @Override public boolean equals(Object o) {
             if (o instanceof ChunkPos pos)
                 return x == pos.x && z == pos.z;
             return false;
         }
         public void setConnect(HashMap<ChunkPos, ChunkPos> map) {
-            addConnect(map, new ChunkPos(x - 1, z));
-            addConnect(map, new ChunkPos(x + 1, z));
+            addConnect(map, new ChunkPos(x - 1, z - 1));
             addConnect(map, new ChunkPos(x, z - 1));
-            addConnect(map, new ChunkPos(x, z + 1));
+            addConnect(map, new ChunkPos(x + 1, z - 1));
+            addConnect(map, new ChunkPos(x - 1, z));
         }
 
-        private void addConnect(@NotNull HashMap<ChunkPos, ChunkPos> map,@NotNull ChunkPos pos) {
-            if(!map.containsKey(this) || !map.containsKey(pos)) return;
+        private void addConnect(@NotNull HashMap<@NotNull ChunkPos, @NotNull ChunkPos> map, @NotNull ChunkPos pos) {
+            if (!map.containsKey(pos)) return;
+            if (!map.containsKey(this)) map.put(this, this);
             ChunkPos root = findRoot(map);
-            if (root == null) return;
             ChunkPos newRoot = pos.findRoot(map);
-            if (newRoot == null) return;
             if (!root.equals(newRoot)) map.put(root, newRoot);
         }
         private ChunkPos findRoot(@NotNull HashMap<ChunkPos, ChunkPos> map) {
-            if (!map.get(this).equals(this))
-                map.put(this, map.get(this).findRoot(map));
-            return map.get(this);
+            ChunkPos pointer = map.get(this);
+            if (!pointer.equals(this))
+                map.put(this, pointer = pointer.findRoot(map));
+            return pointer;
         }
     }
 }

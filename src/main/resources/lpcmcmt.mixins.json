@@ -1,13 +1,16 @@
 {
-	"required": true,
-	"package": "lpcmcmt.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"EntityListMixin",
-		"MinecraftServerMixin",
-		"ServerWorldMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "lpcmcmt.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "EntityListMixin",
+    "EntityMixin",
+    "MinecraftServerMixin",
+    "ServerChunkLoadingManagerMixin",
+    "ServerChunkManagerMixin",
+    "ServerWorldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }

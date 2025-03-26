@@ -1,0 +1,25 @@
+package lpcmcmt.mixin;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import lpcmcmt.Utils.Int2ObjectOpenHashMap_TS;
+import net.minecraft.server.world.ServerChunkLoadingManager;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(ServerChunkLoadingManager.class)
+public class ServerChunkLoadingManagerMixin {
+    @Mutable @Shadow @Final private Int2ObjectMap<ServerChunkLoadingManager.EntityTracker> entityTrackers;
+    @Inject(method = "<init>", at = @At("RETURN"))
+    void initReturn(CallbackInfo ci){
+        Int2ObjectOpenHashMap_TS<ServerChunkLoadingManager.EntityTracker> map;
+        map = new Int2ObjectOpenHashMap_TS<>();
+        for(Int2ObjectMap.Entry<ServerChunkLoadingManager.EntityTracker> pair : entityTrackers.int2ObjectEntrySet())
+            map.put(pair.getIntKey(), pair.getValue());
+        entityTrackers = map;
+    }
+}
