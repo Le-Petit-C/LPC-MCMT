@@ -16,10 +16,6 @@ public class ServerChunkLoadingManagerMixin {
     @Mutable @Shadow @Final private Int2ObjectMap<ServerChunkLoadingManager.EntityTracker> entityTrackers;
     @Inject(method = "<init>", at = @At("RETURN"))
     void initReturn(CallbackInfo ci){
-        Int2ObjectOpenHashMap_TS<ServerChunkLoadingManager.EntityTracker> map;
-        map = new Int2ObjectOpenHashMap_TS<>();
-        for(Int2ObjectMap.Entry<ServerChunkLoadingManager.EntityTracker> pair : entityTrackers.int2ObjectEntrySet())
-            map.put(pair.getIntKey(), pair.getValue());
-        entityTrackers = map;
+        entityTrackers = new Int2ObjectOpenHashMap_TS<>(entityTrackers);
     }
 }
