@@ -20,8 +20,6 @@ public class EntityMultiThreadManager implements Runnable{
                 list = iterateSeparations.getLast();
                 iterateSeparations.removeLast();
             }
-            /*if(!currentThread().getName().equals("Server thread"))
-                Main.LOGGER.info("Another thread running!");*/
             for(Entity entity : list)
                 action.accept(entity);
         }
@@ -52,12 +50,12 @@ public class EntityMultiThreadManager implements Runnable{
             list.add(entity);
         }
         iterateSeparations.sort(Comparator.comparingInt(ArrayList::size));
-        Main.LOGGER.info("Entity list list size: {}", iterateSeparations.size());
+        //Main.LOGGER.info("Entity list list size: {}", iterateSeparations.size());
     }
 
     private record ChunkPos(int x, int z) {
         public static ChunkPos fromEntity(Entity entity) {
-            return new ChunkPos(entity.getBlockX() >> 8, entity.getBlockZ() >> 8);
+            return new ChunkPos(entity.getBlockX() >> 4, entity.getBlockZ() >> 4);
         }
         @Override public int hashCode() {
             return (x << 16) | (z & ((1 << 16) - 1));

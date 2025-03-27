@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Map;
+//import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 
 //Thread-safe extend
@@ -18,6 +19,7 @@ import java.util.function.Consumer;
 */
 @SuppressWarnings("unused")
 public class Int2ObjectOpenHashMap_TS<V> extends Int2ObjectOpenHashMap<V> {
+    //TODO:ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     public Int2ObjectOpenHashMap_TS(final int expected, final float f){super(expected, f);}
     public Int2ObjectOpenHashMap_TS(final int expected){super(expected);}
     public Int2ObjectOpenHashMap_TS(){}

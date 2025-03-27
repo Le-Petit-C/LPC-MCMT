@@ -17,6 +17,7 @@ public class IntegerLock {
     }
     public void subtractAndWaitUntilZero() throws InterruptedException {addAndWaitUntilZero(-1);}
     public void subtract(){add(-1);}
+    public void add(){add(1);}
 
     private int n = 0;
 }

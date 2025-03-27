@@ -22,7 +22,7 @@ public class ServerMultiThread {
         }
     }
     public ServerMultiThread(@NotNull MinecraftServer server){
-        this(server, 1);
+        this(server, 15);
     }
     public void disable(){
         enabled = false;
@@ -40,15 +40,18 @@ public class ServerMultiThread {
     private Runnable runnable;
     private boolean enabled;
     private boolean runRunnable(boolean isCallerThread){
-        if(isCallerThread) stopLock.add(extraThreads.size() + 1);
+        stopLock.add();
         try {runLock.subtractAndWaitUntilZero();}
         catch (InterruptedException ignore) {}
         runnable.run();
-        if(isCallerThread) runLock.add(extraThreads.size() + 1);
+        runLock.add();
         try {stopLock.subtractAndWaitUntilZero();}
         catch (InterruptedException ignore) {}
-        if(isCallerThread && exception != null)
-            throw exception;
+        if(isCallerThread && exception != null){
+            CrashException e = exception;
+            exception = null;
+            throw e;
+        }
         return false;
     }
     private void subThreads(){
