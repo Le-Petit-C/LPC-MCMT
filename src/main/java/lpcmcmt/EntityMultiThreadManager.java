@@ -7,9 +7,26 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class EntityMultiThreadManager implements Runnable{
+    public static int aggressiveness = 0;
     public static void iterateEntities(ServerMultiThread multiThread, Iterable<Entity> iterable, @NotNull Consumer<Entity> action){
-        EntityMultiThreadManager manager = new EntityMultiThreadManager(iterable, action);
-        multiThread.multiThreadRun(manager);
+        if(aggressiveness < 1){
+            EntityMultiThreadManager manager = new EntityMultiThreadManager(iterable, action);
+            multiThread.multiThreadRun(manager);
+        }
+        else{
+            Iterator<Entity> iterator = iterable.iterator();
+            multiThread.multiThreadRun(()->{
+                while(true){
+                    Entity entity;
+                    synchronized (iterator){
+                        if(iterator.hasNext())
+                            entity = iterator.next();
+                        else break;
+                    }
+                    action.accept(entity);
+                }
+            });
+        }
     }
 
     @Override public void run() {
@@ -55,7 +72,9 @@ public class EntityMultiThreadManager implements Runnable{
 
     private record ChunkPos(int x, int z) {
         public static ChunkPos fromEntity(Entity entity) {
-            return new ChunkPos(entity.getBlockX() >> 4, entity.getBlockZ() >> 4);
+            if(aggressiveness >= 0)
+                return new ChunkPos(entity.getBlockX() >> 4, entity.getBlockZ() >> 4);
+            else return new ChunkPos(entity.getBlockX() >> 8, entity.getBlockZ() >> 8);
         }
         @Override public int hashCode() {
             return (x << 16) | (z & ((1 << 16) - 1));

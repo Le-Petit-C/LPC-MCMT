@@ -7,9 +7,14 @@
     "EntityListMixin",
     "EntityMixin",
     "MinecraftServerMixin",
+    "PathNodeTypeCacheMixin",
+    "SectionedEntityCacheMixin",
     "ServerChunkLoadingManagerMixin",
     "ServerChunkManagerMixin",
+    "ServerEntityManagerMixin",
     "ServerWorldMixin",
+    "ServerWorldMixin$ServerEntityHandlerMixin",
+    "WorldChunkMixin",
     "WorldMixin"
   ],
   "injectors": {

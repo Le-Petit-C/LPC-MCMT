@@ -3,21 +3,22 @@ package lpcmcmt;
 import lpcmcmt.Utils.IntegerLock;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
+//import java.util.HashSet;
 
 public class ServerMultiThread {
     public final @NotNull MinecraftServer server;
-    public boolean isExtraThread(Thread thread){return extraThreads.contains(thread);}
+    //public boolean isExtraThread(Thread thread){return extraThreads.contains(thread);}
     public ServerMultiThread(@NotNull MinecraftServer server, int extraThreadCount){
         enabled = true;
         this.server = server;
-        extraThreads = new HashSet<>();
-        runLock.add(extraThreadCount + 1);
+        //extraThreads = new HashSet<>();
+        runLock.add();
         for(int a = 0; a < extraThreadCount; ++a){
             Thread thread = new Thread(this::subThreads);
-            extraThreads.add(thread);
+            //extraThreads.add(thread);
             thread.start();
         }
     }
@@ -34,7 +35,7 @@ public class ServerMultiThread {
     }
 
     private CrashException exception;
-    private final HashSet<Thread> extraThreads;
+    //private final HashSet<Thread> extraThreads;
     private final @NotNull IntegerLock runLock = new IntegerLock();
     private final @NotNull IntegerLock stopLock = new IntegerLock();
     private Runnable runnable;
@@ -56,16 +57,17 @@ public class ServerMultiThread {
     }
     private void subThreads(){
         try{
+            runLock.add();
             while(enabled){
                 if(runRunnable(false))
                     break;
             }
         } catch (Throwable exception){
             Main.LOGGER.error(exception.toString());
-            if(exception instanceof CrashException crashException){
-                this.exception = crashException;
-                stopLock.subtract();
-            }
+            if(exception instanceof CrashException crashException) this.exception = crashException;
+            else this.exception = new CrashException(new CrashReport(exception.toString(), exception));
+            stopLock.subtract();
+            runLock.subtract();
         }
     }
 }
