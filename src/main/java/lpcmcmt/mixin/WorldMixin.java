@@ -23,7 +23,7 @@ public class WorldMixin implements IRWLockable {
     }
     @Unique ReadWriteLock lock = new ReentrantReadWriteLock();
     @Override public @NotNull ReadWriteLock lPC_MCMT$getLock(){return lock;}
-
+/*
     @Inject(method = {
             "getBlockState"
     }, at = @At("HEAD"))
@@ -40,5 +40,5 @@ public class WorldMixin implements IRWLockable {
     @Inject(method = {
             "setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;II)Z"
     }, at = @At("RETURN"))
-    void returnableWriteReturn(CallbackInfoReturnable<?> cir){unlockWrite();}
+    void returnableWriteReturn(CallbackInfoReturnable<?> cir){unlockWrite();}*/
 }

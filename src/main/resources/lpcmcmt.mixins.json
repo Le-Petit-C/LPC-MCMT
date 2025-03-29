@@ -4,8 +4,11 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "DefaultMinecartControllerMixin",
+    "EntityIndexMixin",
     "EntityListMixin",
     "EntityMixin",
+    "EntityTrackingSectionMixin",
+    "LevelPropagatorMixin",
     "MinecraftServerMixin",
     "PathNodeTypeCacheMixin",
     "SectionedEntityCacheMixin",

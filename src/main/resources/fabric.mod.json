@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "lpcmcmt",
 	"version": "${version}",
-	"name": "Example mod",
+	"name": "LPCMCMT",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
 		"Me!"

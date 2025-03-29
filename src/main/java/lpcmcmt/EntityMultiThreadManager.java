@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class EntityMultiThreadManager implements Runnable{
-    public static int aggressiveness = 0;
+    public static int aggressiveness = 1;
     public static void iterateEntities(ServerMultiThread multiThread, Iterable<Entity> iterable, @NotNull Consumer<Entity> action){
         if(aggressiveness < 1){
             EntityMultiThreadManager manager = new EntityMultiThreadManager(iterable, action);

@@ -1,8 +1,15 @@
 package lpcmcmt.mixin;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongAVLTreeSet;
+import it.unimi.dsi.fastutil.longs.LongSortedSet;
+import lpcmcmt.Utils.ThreadLocalLong2ObjectMap;
+import lpcmcmt.Utils.ThreadLocalLongSortedSet;
+import net.minecraft.world.entity.EntityLike;
+import net.minecraft.world.entity.EntityTrackingSection;
 import net.minecraft.world.entity.SectionedEntityCache;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -12,8 +19,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Mixin(SectionedEntityCache.class)
-public class SectionedEntityCacheMixin {
-    @Unique private final ReadWriteLock lock = new ReentrantReadWriteLock();
+public class SectionedEntityCacheMixin<T extends EntityLike> {
+    /*@Unique private final ReadWriteLock lock = new ReentrantReadWriteLock();
     @Inject(method = {
             "forEachInBox"
     }, at = @At("HEAD"))
@@ -53,5 +60,12 @@ public class SectionedEntityCacheMixin {
     @Inject(method = {
             "getTrackingSection"
     }, at = @At("RETURN"))
-    void returnableWriteReturn(CallbackInfoReturnable<?> cir){lock.writeLock().unlock();}
+    void returnableWriteReturn(CallbackInfoReturnable<?> cir){lock.writeLock().unlock();}*/
+    @Final @Shadow @Mutable private LongSortedSet trackedPositions;
+    @Final @Shadow @Mutable private Long2ObjectMap<EntityTrackingSection<T>> trackingSections;
+    @Inject(method = "<init>", at = @At("RETURN"))
+    void initReturn(CallbackInfo ci){
+        trackedPositions = new ThreadLocalLongSortedSet(LongAVLTreeSet::new);
+        trackingSections = new ThreadLocalLong2ObjectMap<>(Long2ObjectOpenHashMap::new);
+    }
 }
